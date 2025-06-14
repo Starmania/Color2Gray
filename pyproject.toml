@@ -1,0 +1,31 @@
+[project]
+name = "color2gray"
+version = "0.1.0"
+description = "Convert colored images to a grayscale version using differents methods"
+authors = [
+    { name = "Starmania", email = "wycvhrt6vzscfpedxr@gmail.com" },
+    { name = "Barynonyx", email = "simon.deulniau@gmail.com" },
+]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent"
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["numpy (>=2.3.0,<3.0.0)", "pillow (>=11.2.1,<12.0.0)"]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.3.2"
+isort = "^6.0.1"
+pylint = "^3.3.7"
+pytest = "^8.4.0"

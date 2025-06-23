@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from color2gray.methods import all_methods, BaseMethod
-from color2gray.tools import convert_image, save_image
+from color2gray.tools import load_image, save_image
 
 # Define the test directory and output directory
 TEST_DIR = Path(__file__).parent
@@ -51,11 +51,17 @@ def _test_method(method: BaseMethod, images: list[Path], output_dir: Path):
     """Test a specific method with all images."""
 
     for image_path in images:
-        image = convert_image(image_path)
+        image = load_image(image_path)
         gray_image = method(image)
+
+        # plt.imshow(image)
+        # plt.imshow(gray_image, cmap="gray")
+        # plt.axis("off")
+        # plt.show()
+
         output_path = output_dir / image_path.name
         save_image(gray_image, output_path)
         assert output_path.exists(), f"Output image {output_path} was not created."
-        print(
-            f"Processed {image_path} with {method.__class__.__name__} and saved to {output_path}"
-        )
+        # print(
+        #     f"Processed {image_path} with {method.__class__.__name__} and saved to {output_path}"
+        # )

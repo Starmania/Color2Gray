@@ -23,6 +23,6 @@ class AverageLuminanceMethod(BaseMethod):
             np.ndarray: The grayscale image.
         """
         # Calculate the grayscale image using the luminous factors
-        gray_image = np.sum(image * RGB_FACTOR, axis=2, keepdims=True)
+        gray_image = np.sum(image * RGB_FACTOR, axis=2, keepdims=True).squeeze()
 
         return gray_image

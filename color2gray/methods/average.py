@@ -20,6 +20,6 @@ class AverageMethod(BaseMethod):
             np.ndarray: The grayscale image.
         """
         # Calculate the average across the color channels (axis 2)
-        gray_image = np.average(image, axis=2, keepdims=True)
+        gray_image = np.average(image, axis=2, keepdims=True).squeeze()
 
         return gray_image

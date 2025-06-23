@@ -49,3 +49,13 @@
 | `average_luminance` | ![average_luminance](tests/output_images/average_luminance/test_0/Weave.jpg) |
 | `necg`              | ![necg](tests/output_images/necg/test_0/Weave.jpg)                           |
 | `snecg`             | ![snecg](tests/output_images/snecg/test_0/Weave.jpg)                         |
+
+## Roche
+
+| Conversion Method   | Image                                                                        |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `original`          | ![original](tests/input_images/roche.png)                                    |
+| `average`           | ![average](tests/output_images/average/test_0/roche.png)                     |
+| `average_luminance` | ![average_luminance](tests/output_images/average_luminance/test_0/roche.png) |
+| `necg`              | ![necg](tests/output_images/necg/test_0/roche.png)                           |
+| `snecg`             | ![snecg](tests/output_images/snecg/test_0/roche.png)                         |

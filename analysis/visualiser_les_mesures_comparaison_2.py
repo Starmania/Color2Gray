@@ -224,6 +224,7 @@ def val_classification(image_gray: np.ndarray, threshold: int):
     # print("True Negative Rate (TNR): ", true_negative_rate)
     # print("False Positive Rate (FPR): ", false_positive_rate)
     # print("False Negative Rate (FNR): ", false_negative_rate)
+    # print("Positive Predictive Value (PPV, precision):", positive_predictive_value)
     # print("Specificity:", true_negative_rate)
     # print("F1: ", f1_score)
     # print("Accuracy (ACC): ", accuracy)
@@ -239,6 +240,10 @@ def val_classification(image_gray: np.ndarray, threshold: int):
         "false_negative_rate": false_negative_rate,
         "false_positive_rate": false_positive_rate,
         "true_negative_rate": true_negative_rate,
+        "positive_predictive_value": positive_predictive_value,
+        "false_discovery_rate": false_discovery_rate,
+        "negative_predictive_value": negative_predictive_value,
+        "false_ommission_rate": false_ommission_rate,
         "specificity": true_negative_rate,
         "f1_score": f1_score,
         "accuracy": accuracy,
@@ -388,35 +393,41 @@ def val_classifications(image_gray: np.ndarray):
     phi_max = -1.0
 
     x = np.arange(-255, 255).astype(int)
-    tpr = []
-    tnr = []
-    f1_score = []
-    accuracy = []
-    phi = []
-    img_classified = []
+
+    resultats = {}
+
     for threshold in x:
         metrics = val_classification(image_gray, threshold)
-        tpr.append(metrics["true_positive_rate"])
-        tnr.append(metrics["true_negative_rate"])
-        f1_score.append(metrics["f1_score"])
-        accuracy.append(metrics["accuracy"])
-        phi.append(metrics["phi"])
-        img_classified.append(metrics["img_classified"])
+
+        for key, value in metrics.items():
+            if key not in resultats:
+                resultats[key] = []
+            resultats[key].append(value)
+
         if metrics["phi"] > phi_max:
             phi_max = metrics["phi"]
             x_max = int(threshold)
 
         # print("")
 
-    resultats = {
-        "tpr": tpr,
-        "tnr": tnr,
-        "f1_score": f1_score,
-        "accuracy": accuracy,
-        "phi": phi,
-        "img_classified": img_classified,
-        "x_max": x_max,
-    }
+    resultats["x_max"] = x_max
+
+    def print_max():
+        precision = resultats["true_positive_rate"][x_max]
+        specificity = resultats["true_negative_rate"][x_max]
+        f1_score = resultats["f1_score"][x_max]
+        accuracy = resultats["accuracy"][x_max]
+
+        print("Meilleur seuil pour le coefficient phi :", x[x_max])
+        print("Précision :", precision)
+        print("Spécificité :", specificity)
+        print("F1 :", f1_score)
+        print("Accuracy (ACC) :", accuracy)
+        print("Phi :", phi_max)
+        print("")
+
+    print_max()
+
     return resultats
 
 
@@ -433,8 +444,18 @@ def afficher_resultats(resultats):
     print("Meilleur seuil pour le coefficient phi :", x[x_max])
 
     plt.figure(figsize=(10, 6))
-    plt.plot(x, resultats["tpr"], label="True Positive Rate (TPR)", color="blue")
-    plt.plot(x, resultats["tnr"], label="True Negative Rate (TNR)", color="green")
+    plt.plot(
+        x,
+        resultats["true_positive_rate"],
+        label="True Positive Rate (TPR)",
+        color="blue",
+    )
+    plt.plot(
+        x,
+        resultats["true_negative_rate"],
+        label="True Negative Rate (TNR)",
+        color="green",
+    )
     plt.plot(x, resultats["f1_score"], label="F1 Score", color="orange")
     plt.plot(x, resultats["accuracy"], label="Accuracy", color="red")
     plt.plot(x, resultats["phi"], label="Phi Coefficient", color="purple")
@@ -448,8 +469,8 @@ def afficher_resultats(resultats):
 
     polar(
         [
-            resultats["tpr"][x_max],
-            resultats["tnr"][x_max],
+            resultats["true_positive_rate"][x_max],
+            resultats["true_negative_rate"][x_max],
             resultats["f1_score"][x_max],
             resultats["accuracy"][x_max],
         ]
@@ -478,7 +499,7 @@ def test_val_classification(methods: dict[str, Callable], image_rgb: np.ndarray)
 
             results = val_classifications(image_gray)
 
-            print(f"{name} : {results['phi'][results['x_max'] + 255]}")
+            # print(f"{name} : {results['phi'][results['x_max'] + 255]}")
             plt.imsave(
                 os.path.join("results", f"{name}_classified.png"),
                 colorier_image_classifiee(
@@ -499,9 +520,9 @@ def test_val_classification(methods: dict[str, Callable], image_rgb: np.ndarray)
 
 def main():
     # Chargement et préparation de l'image
-    # image = ouvrir_image(base_dir) * 255.0
+    image = ouvrir_image(base_dir) * 255.0
 
-    image = plt.imread("analysis/tmp.png") * 255.0
+    # image = plt.imread("analysis/tmp.png") * 255.0
 
     from color2gray.methods import AverageMethod, all_methods
 
